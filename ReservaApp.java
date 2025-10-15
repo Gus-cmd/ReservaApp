@@ -17,7 +17,7 @@ public class ReservaApp extends JFrame {
     public ReservaApp() {
         restaurante = new Restaurante();
         // Mesas de prueba
-        restaurante.agregarMesa(new Mesa(1, 2));
+        restaurante.agregarMesa(new Mesa(1, 2));        
         restaurante.agregarMesa(new Mesa(2, 4));
         restaurante.agregarMesa(new Mesa(3, 6));
 
@@ -59,7 +59,7 @@ public class ReservaApp extends JFrame {
         reservarBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
         reservarBtn.setPreferredSize(new Dimension(150, 40));
 
-        JPanel buttonPanel = new JPanel();
+           JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(new Color(245, 245, 250));
         buttonPanel.add(reservarBtn);
 
