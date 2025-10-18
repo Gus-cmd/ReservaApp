@@ -1,28 +1,10 @@
-public class Cliente {
-    @SuppressWarnings("FieldMayBeFinal")
-    private String nombre;
-    @SuppressWarnings("FieldMayBeFinal")
-    private String telefono;
-
-    public Cliente(String nombre, String telefono) {
-        this.nombre = nombre;
-        this.telefono = telefono;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getTelefono() {
-        return telefono;
+public class Cliente extends Persona {
+    public Cliente(String nombre, String contacto) {
+        super(nombre, contacto);
     }
 
     @Override
     public String toString() {
-        return nombre + " (" + telefono + ")";
+        return nombre + " (" + contacto + ")";
     }
 }
-
-
-
-

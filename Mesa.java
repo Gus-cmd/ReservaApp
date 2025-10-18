@@ -1,4 +1,4 @@
-public class Mesa {
+public class Mesa implements Reservable {
     @SuppressWarnings("FieldMayBeFinal")
     private int id;
     @SuppressWarnings("FieldMayBeFinal")
@@ -11,19 +11,17 @@ public class Mesa {
         this.disponible = true;
     }
 
-    public int getId() {
-        return id;
+    public int getId() { return id; }
+    public int getCapacidad() { return capacidad; }
+    public boolean isDisponible() { return disponible; }
+
+    @Override
+    public void reservar() {
+        this.disponible = false;
     }
 
-    public int getCapacidad() {
-        return capacidad;
-    }
-
-    public boolean isDisponible() {
-        return disponible;
-    }
-
-    public void setDisponible(boolean disponible) {
-        this.disponible = disponible;
+    @Override
+    public void liberar() {
+        this.disponible = true;
     }
 }

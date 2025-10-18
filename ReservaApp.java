@@ -1,139 +1,146 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.*;
 
 public class ReservaApp extends JFrame {
+    @SuppressWarnings("FieldMayBeFinal")
     private Restaurante restaurante;
-
+    @SuppressWarnings("FieldMayBeFinal")
     private JTextField nombreField;
+    @SuppressWarnings("FieldMayBeFinal")
     private JTextField contactoField;
+    @SuppressWarnings("FieldMayBeFinal")
     private JTextField personasField;
+    @SuppressWarnings("FieldMayBeFinal")
     private JTextField fechaField;
+    @SuppressWarnings("FieldMayBeFinal")
     private JTextField horaField;
-    private JTextArea resultadoArea;
+    @SuppressWarnings("FieldMayBeFinal")
+    private JTextPane resultadoPane;
 
-    @SuppressWarnings("Convert2Lambda")
     public ReservaApp() {
         restaurante = new Restaurante();
-        // Mesas de prueba
-        restaurante.agregarMesa(new Mesa(1, 2));        
+        restaurante.agregarMesa(new Mesa(1, 2));
         restaurante.agregarMesa(new Mesa(2, 4));
         restaurante.agregarMesa(new Mesa(3, 6));
 
-        setTitle("🍽️ Sistema de Reservas");
-        setSize(520, 450);
+        setTitle("🍽️ Sistema de Reservas - Restaurante");
+        setSize(680, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout(15, 15));
+        setLayout(new BorderLayout(10, 10));
+
+        // Panel superior
+        JLabel titleLabel = new JLabel("Sistema de Reservas", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 20));
+        titleLabel.setForeground(Color.WHITE);
+        JPanel header = new JPanel();
+        header.setBackground(new Color(52, 152, 219));
+        header.add(titleLabel);
 
         // Panel de formulario
-        JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
-        formPanel.setBorder(BorderFactory.createTitledBorder("Datos de la Reserva"));
+        JPanel formPanel = new JPanel(new GridLayout(6, 2, 8, 8));
+        formPanel.setBorder(BorderFactory.createTitledBorder("Formulario de Reserva"));
         formPanel.setBackground(new Color(245, 245, 250));
 
-        formPanel.add(new JLabel("👤 Nombre del Cliente:"));
+        Font labelFont = new Font("Segoe UI Emoji", Font.BOLD, 13);
+        formPanel.add(new JLabel("👤 Nombre:")).setFont(labelFont);
         nombreField = new JTextField();
         formPanel.add(nombreField);
 
-        formPanel.add(new JLabel("📞 Contacto:"));
+        formPanel.add(new JLabel("📞 Contacto:")).setFont(labelFont);
         contactoField = new JTextField();
         formPanel.add(contactoField);
 
-        formPanel.add(new JLabel("👥 Personas:"));
+        formPanel.add(new JLabel("👥 Personas:")).setFont(labelFont);
         personasField = new JTextField();
         formPanel.add(personasField);
 
-        formPanel.add(new JLabel("📅 Fecha (dd/mm):"));
+        formPanel.add(new JLabel("📅 Fecha (dd/mm):")).setFont(labelFont);
         fechaField = new JTextField();
         formPanel.add(fechaField);
 
-        formPanel.add(new JLabel("⏰ Hora (0-23):"));
+        formPanel.add(new JLabel("⏰ Hora (0-23):")).setFont(labelFont);
         horaField = new JTextField();
         formPanel.add(horaField);
 
-        // Botón de reservar (en un panel pequeño)
-        JButton reservarBtn = new JButton(" Reservar Mesa");
-        reservarBtn.setBackground(new Color(52, 152, 219));
+        JButton reservarBtn = new JButton("💾 Reservar Mesa");
+        reservarBtn.setFont(new Font("Segoe UI Emoji", Font.BOLD, 13));
+        reservarBtn.setBackground(new Color(41, 128, 185));
         reservarBtn.setForeground(Color.WHITE);
         reservarBtn.setFocusPainted(false);
-        reservarBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        reservarBtn.setPreferredSize(new Dimension(150, 40));
 
-           JPanel buttonPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(new Color(245, 245, 250));
         buttonPanel.add(reservarBtn);
 
-        // Área de resultados
-        resultadoArea = new JTextArea(8, 40);
-        resultadoArea.setEditable(false);
-        resultadoArea.setFont(new Font("Monospaced", Font.PLAIN, 13));
-        resultadoArea.setBorder(BorderFactory.createTitledBorder("Resultado de la Reserva"));
-        JScrollPane scrollPane = new JScrollPane(resultadoArea);
+        JPanel leftPanel = new JPanel(new BorderLayout());
+        leftPanel.add(formPanel, BorderLayout.CENTER);
+        leftPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Añadir todo al layout
-        add(formPanel, BorderLayout.NORTH);
-        add(buttonPanel, BorderLayout.CENTER);
-        add(scrollPane, BorderLayout.SOUTH);
+        // Panel de resultados
+        resultadoPane = new JTextPane();
+        resultadoPane.setEditable(false);
+        resultadoPane.setContentType("text/html");
+        resultadoPane.setBorder(BorderFactory.createTitledBorder("🧾 Resultado"));
+        resultadoPane.setBackground(Color.WHITE);
+        JScrollPane scroll = new JScrollPane(resultadoPane);
 
-        // Acción del botón
-        reservarBtn.addActionListener(new ActionListener() {
-            @SuppressWarnings("unused")
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    String nombre = nombreField.getText().trim();
-                    String contacto = contactoField.getText().trim();
-                    int personas = Integer.parseInt(personasField.getText().trim());
-                    String fecha = fechaField.getText().trim();
-                    String hora = horaField.getText().trim();
+        JPanel centerPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        centerPanel.add(leftPanel);
+        centerPanel.add(scroll);
 
-                    if (nombre.isEmpty() || contacto.isEmpty() || fecha.isEmpty() || hora.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "⚠️ Complete todos los campos antes de reservar.");
-                        return;
-                    }
+        add(header, BorderLayout.NORTH);
+        add(centerPanel, BorderLayout.CENTER);
 
-                    int confirm = JOptionPane.showConfirmDialog(null,
-                            "¿Desea reservar una mesa para " + personas + " personas\n" +
-                            "el día " + fecha + " a las " + hora + " horas?",
-                            "Confirmar Reserva", JOptionPane.YES_NO_OPTION);
+        reservarBtn.addActionListener(e -> procesarReserva());
+        setLocationRelativeTo(null);
+    }
 
-                    if (confirm == JOptionPane.YES_OPTION) {
-                        Mesa mesaAsignada = restaurante.buscarMesaDisponible(personas, Integer.parseInt(hora));
-                        if (mesaAsignada != null) {
-                            Reserva reserva = new Reserva(
-                                    new Cliente(nombre, contacto),
-                                    mesaAsignada,
-                                    fecha,
-                                    hora,
-                                    personas
-                            );
-                            mesaAsignada.setDisponible(false);
+    private void procesarReserva() {
+        try {
+            String nombre = nombreField.getText().trim();
+            String contacto = contactoField.getText().trim();
+            int personas = Integer.parseInt(personasField.getText().trim());
+            String fecha = fechaField.getText().trim();
+            String hora = horaField.getText().trim();
 
-                            resultadoArea.setText("✅ Reserva confirmada\n\n" +
-                                    "👤 Cliente: " + nombre + "\n" +
-                                    "📞 Contacto: " + contacto + "\n" +
-                                    "👥 Personas: " + personas + "\n" +
-                                    "📅 Fecha: " + fecha + "\n" +
-                                    "⏰ Hora: " + hora + ":00\n" +
-                                    "🍽️ Mesa asignada: Nº " + mesaAsignada.getId() +
-                                    " (Capacidad: " + mesaAsignada.getCapacidad() + ")");
-                        } else {
-                            resultadoArea.setText("❌ No hay mesas disponibles para " + personas +
-                                    " personas en la fecha " + fecha + " a las " + hora + " horas.");
-                        }
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "⚠️ Ingrese valores numéricos válidos en Personas y Hora.");
-                }
+            if (nombre.isEmpty() || contacto.isEmpty() || fecha.isEmpty() || hora.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "⚠️ Complete todos los campos.");
+                return;
             }
-        });
 
-        setLocationRelativeTo(null); // Centrar ventana
+            Mesa mesaAsignada = restaurante.buscarMesaDisponible(personas, Integer.parseInt(hora));
+            if (mesaAsignada != null) {
+                Reserva reserva = new Reserva(new Cliente(nombre, contacto), mesaAsignada, fecha, hora, personas);
+                reserva.confirmarReserva();
+                mesaAsignada.reservar();
+
+                String fechaActual = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+                String horaActual = new SimpleDateFormat("HH:mm:ss").format(new Date());
+
+                resultadoPane.setText(String.format("""
+                        <html><body style='font-family: Segoe UI Emoji; font-size: 13px;'>
+                        <b style='color:green;'>✅ Reserva Confirmada</b><br><br>
+                        👤 Cliente: %s<br>
+                        📞 Contacto: %s<br>
+                        👥 Personas: %d<br>
+                        📅 Fecha: %s<br>
+                        ⏰ Hora: %s:00<br>
+                        🍽️ Mesa: Nº %d (Capacidad: %d)<br><br>
+                        🕒 Registro: %s %s
+                        </body></html>
+                        """, nombre, contacto, personas, fecha, hora,
+                        mesaAsignada.getId(), mesaAsignada.getCapacidad(), fechaActual, horaActual));
+            } else {
+                resultadoPane.setText("<html><body style='color:red;'>❌ No hay mesas disponibles.</body></html>");
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "⚠️ Ingrese valores numéricos válidos.");
+        }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new ReservaApp().setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new ReservaApp().setVisible(true));
     }
 }

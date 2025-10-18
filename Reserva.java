@@ -1,12 +1,4 @@
-public class Reserva {
-    @SuppressWarnings("FieldMayBeFinal")
-    private Cliente cliente;
-    @SuppressWarnings("FieldMayBeFinal")
-    private Mesa mesa;
-    @SuppressWarnings("FieldMayBeFinal")
-    private String fecha;
-    @SuppressWarnings("FieldMayBeFinal")
-    private String hora;
+public class Reserva extends ReservaBase {
     @SuppressWarnings("FieldMayBeFinal")
     private int personas;
 
@@ -18,32 +10,14 @@ public class Reserva {
         this.personas = personas;
     }
 
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public Mesa getMesa() {
-        return mesa;
-    }
-
-    public String getFecha() {
-        return fecha;
-    }
-
-    public String getHora() {
-        return hora;
-    }
-
-    public int getPersonas() {
-        return personas;
+    @Override
+    public void confirmarReserva() {
+        System.out.println("Reserva confirmada para " + cliente.getNombre());
     }
 
     @Override
     public String toString() {
-        return "Cliente: " + cliente +
-               "\nMesa: " + "Nº " + mesa.getId() + " (capacidad: " + mesa.getCapacidad() + ")" +
-               "\nFecha: " + fecha +
-               "\nHora: " + hora +
-               "\nPersonas: " + personas;
+        return String.format("Cliente: %s | Mesa: %d | Fecha: %s %s:00 | Personas: %d",
+                cliente.getNombre(), mesa.getId(), fecha, hora, personas);
     }
 }
